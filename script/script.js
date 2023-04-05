@@ -1,27 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
     // создаем массив в который войдут занятые и свободные поля, чтобы скрипт мог "видеть" поле.
-    const   man = document.querySelector('.human'), 
-            comp = document.querySelector('.ai'),
-            startButton = document.querySelector('#startButton'),
+    const   startButton = document.querySelector('#startButton'),
             restartButton = document.querySelector('#restartButton'),
             winnigMessage = document.querySelector('.start-message'),
             cells = document.querySelectorAll('.cell'),
-            numPool = [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ], //массив полей для ходов
             scoreManDiv  = document.querySelectorAll('.score-in-message-man span'),
             scoreCompDiv  = document.querySelectorAll('.score-in-message-comp span'),
             theWinner = document.querySelector('.theWinner'),
             changeFigure = document.querySelector('#changeButton'),
             resetScore = document.querySelector('#resetButton'),
             humanFigure = document.querySelector('.human-turn span'),
-            aiFigure = document.querySelector('.ai-turn span');
-            let manValue, 
-                compValue, 
-                counter = 1, 
-                scoreMan = 0, 
-                scoreAi = 0, 
-                itsFirstGame = true, 
-                fieldOfGame = [], // Массив основного игрового поля
-                excludePool = []; //массив "занятых" полей 
+            aiFigure = document.querySelector('.ai-turn span'),
+            numPool = [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]; //массив полей для ходов
+           
+    let manValue, // чем играет человек
+        compValue, // чем играет компьютер
+        counter = 1, // счетчик
+        scoreMan = 0, // очки человека
+        scoreAi = 0, // очки компьютера
+        itsFirstGame = true, // переменная первой игры
+        fieldOfGame = [], // Массив основного игрового поля
+        excludePool = []; //массив "занятых" полей 
 
 
     //Функция определения рандомного числа от 1 до num                    
@@ -32,8 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //Функция хода компьютера
     function aiTurn(compValue) {
-        excludePool = [];
-        console.log(compValue);
+        excludePool = []; // при ходе компьютера каждый раз обнуляем массив с занятыми полями
         const filteredPool = []; //Создаем обнуленный отфильтрованный массив
         fieldOfGame.forEach((e, i) => {
             if (fieldOfGame[i] !== '') {
@@ -47,17 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         if (counter === 1) { // Первый ход рандомный
-            const rand = filteredPool[Math.floor(Math.random() * filteredPool.length)];
+            const rand = filteredPool[Math.floor(Math.random() * filteredPool.length)]; //ищем рандомное число из доступных ходов
             fieldOfGame[rand] = compValue; // Запись в игровое поле
             cells.forEach(e => {
                 if(+e.dataset.cell === rand) {
-                    e.classList.add(compValue) // Запись в ячейку в HTML
+                    e.classList.add(compValue); // Запись в ячейку в HTML
                 }
             })
             counter++;
         } else {
             // Если ход не первый - запускаем функцию анализа кода
-            revievNextTurn(fieldOfGame, filteredPool, compValue, manValue)
+            revievNextTurn(fieldOfGame, filteredPool, compValue, manValue);
         }
         
             
@@ -66,23 +64,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //начало игры
     function start() {
-        excludePool = [];
+        excludePool = []; // при старте обнуляем массив с исключениями
         fieldOfGame = [   
             '', '', '',
             '', '', '',
             '', '', ''
-        ]
-        cells.forEach(e => {
-            e.classList.remove('x')
-            e.classList.remove('circle')
-        })
-        winnigMessage.classList.remove('show');
-        winnigMessage.classList.add('hide');
-        if (itsFirstGame) {
+        ] // обнуляем поле игры
+        cells.forEach(e => { // обнуляем поля в html
+            e.classList.remove('x');
+            e.classList.remove('circle');
+        }) 
+        winnigMessage.classList.remove('show'); 
+        winnigMessage.classList.add('hide'); // прячем winningmessage
+        if (itsFirstGame) { //если первая игра то проходимся по этому алгоритму
+            
             cells.forEach(e => {
                 e.addEventListener('click', (event) => {
                     
-                    if (e.classList.contains('x') || e.classList.contains('circle')) {   //проверка на свободное поле
+                    if (e.classList.contains('x') || e.classList.contains('circle')) {   // проверка на свободное поле
                     } else {
                         e.classList.add(manValue); //Запись в выбранное поле в HTML
                         fieldOfGame[+e.dataset.cell] = manValue; // Запись в игровое поле
@@ -127,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fieldOfGame[posToMoveinAiReview] = compValue; // Записываем в основное игровое поле ход компьютера
             cells.forEach(e => {
                 if(+e.dataset.cell === posToMoveinAiReview) {
-                    e.classList.add(compValue) // Записываем в HTML ход компьютера
+                    e.classList.add(compValue); // Записываем в HTML ход компьютера
                 }
             })
         } else if (winAiCoef === 0 && winManCoef === 0) { // Проверка на отсутвие угроз или победы
@@ -142,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
             fieldOfGame[posToMoveinManReview] = compValue;// Записываем в основное игровое поле ход компьютера
             cells.forEach(e => {
                 if(+e.dataset.cell === posToMoveinManReview) {
-                    e.classList.add(compValue)// Записываем в HTML ход компьютера
+                    e.classList.add(compValue); // Записываем в HTML ход компьютера
                 }
             })
         } 
@@ -183,20 +182,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (arr[a] === manValue &&
                     arr[b] === manValue &&
                     arr[c] === manValue) {
-                        scoreMan++;
+                        scoreMan++; //счетчик очков
                         itsFirstGame = false;
                         if (itsFirstGame) {
                             startButton.style.display="block";
                         } else {
-                            restartButton.style.display="block"
+                            restartButton.style.display="block";
                         }
                         scoreManDiv.forEach(e => {
                             e.innerHTML = scoreMan;
                         })
                         winnigMessage.classList.remove('hide');
                         winnigMessage.classList.add('show');
-                        theWinner.innerHTML = "Human"
-                        return "man"
+                        theWinner.innerHTML = "Human";//вывод победителя
+                        return "man";
                 }
             }
         } else if (aiCheckin && finalCheckin) { // условие победы компьютера в финальной проверке
@@ -205,60 +204,63 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (arr[a] === compValue &&
                     arr[b] === compValue &&
                     arr[c] === compValue) {
-                        scoreAi++;
+                        scoreAi++;//счетчик очков
                         itsFirstGame = false;
                         if (itsFirstGame) {
                             startButton.style.display="block";
                         } else {
-                            restartButton.style.display="block"
+                            restartButton.style.display="block";
                         }
                         scoreCompDiv.forEach(e => {
                             e.innerHTML = scoreAi;
                         })
                         winnigMessage.classList.remove('hide');
                         winnigMessage.classList.add('show');
-                        theWinner.innerHTML = "Computer"
-                        return
+                        theWinner.innerHTML = "Computer"; //вывод победителя
+                        return;
                 } 
             }
         }
         
-        if (finalCheckin) {
+        if (finalCheckin) { //проверка ничьи
             let i = 0;
             fieldOfGame.forEach(e => {
                 if (e !== '') {
                     i++;
                 }
-            })
-            if (i === 9) {
+            }); // если все поля не пустые (9), и не сработала ни одна из верхних проверок - то ничья
+            if (i === 9) { 
                 itsFirstGame = false;
                 if (itsFirstGame) {
                     startButton.style.display="block";
                 } else {
-                    restartButton.style.display="block"
+                    restartButton.style.display="block";
                 }
                 winnigMessage.classList.remove('hide');
                 winnigMessage.classList.add('show');
-                theWinner.innerHTML = "Draw"
-                return
+                theWinner.innerHTML = "Draw"; //вывод ничьи
+                return;
             }
         }
                         
 
     }
 
+    // функция сброса очков
     function resetScoreBtn() {
         scoreMan = 0;
         scoreAi = 0;
         scoreManDiv.forEach(e => {
             e.innerHTML = scoreAi;
-        })
+        });
         scoreCompDiv.forEach(e => {
             e.innerHTML = scoreAi;
-        })
+        });
     }
 
-    function restartResetBtn() {
+
+    // функция рестарта и изменения фигуры (в обоих случаях игра будет начата сначала (счет сохранится))
+    function restartChangeBtn() {
         if (manValue === 'x') {
             humanFigure.innerHTML = 'O';
             manValue = 'circle';
@@ -277,7 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Кнопка старт
     startButton.addEventListener('click', e => {
-        console.log(e);
         startButton.style.display="none";
         restartButton.style.display="block";
         // Распределение первого хода (первыми ходят всегда крестики, поэтому распределение, кто чем ходит)
@@ -293,12 +294,12 @@ document.addEventListener('DOMContentLoaded', () => {
             compValue = `x`;
         }
         // При нажатии на старт запускаем фукнцию "старт".
-        start()
+        start();
     });
 
 
 
-    restartButton.addEventListener('click', restartResetBtn);
-    changeFigure.addEventListener('click', restartResetBtn);
+    restartButton.addEventListener('click', restartChangeBtn);
+    changeFigure.addEventListener('click', restartChangeBtn);
     resetScore.addEventListener('click', resetScoreBtn);
 });
