@@ -13,7 +13,7 @@ body {
 
 .board {
     width: 100vw;
-    height: 100vh;
+    height: 35vh;
     display: grid;
     justify-content: center;
     align-content: center;
@@ -194,10 +194,76 @@ body {
      font-size: 35px;
 }
 
-.human.x{
+.human{
+    font-size: 20px;
+    margin-top: 20px;
+}
 
+.human-result{
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+.ai{
+    font-size: 20px;
+}
+
+.ai-result{
+    font-size: 20px;
 }
 
 .score-in-message {
     margin: 0.5em;
+}
+
+#resetButton{
+    margin-top: 30px;
+    font-size: 2rem;
+    background-color: white;
+    border: 1px solid black;
+    padding: .25em .5em;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+#resetButton:hover{
+    background-color: black;
+    color: white;
+    border-color: white;
+}
+
+.result-wrapper {
+    display: flex;
+}
+
+.move-order{
+    margin-top: 75px;
+    display: flex;
+    flex-direction: row;
+}
+
+.human-turn{
+    font-size: 20px;
+    padding-right: 50px;
+}
+
+.ai-turn{
+    font-size: 20px;
+}
+
+#changeButton{
+    
+    font-size: 1rem;
+    background-color: white;
+    border: 1px solid black;
+    padding: .25em .5em;
+    cursor: pointer;
+    margin: 1rem;
+    
+}
+
+#changeButton:hover{
+    background-color: black;
+    color: white;
+    border-color: white;
 }

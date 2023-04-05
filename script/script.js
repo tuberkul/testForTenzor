@@ -7,11 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
             winnigMessage = document.querySelector('.start-message'),
             cells = document.querySelectorAll('.cell'),
             numPool = [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ], //массив полей для ходов
-            scoreManDiv  = document.querySelector('.score-in-message-man'),
-            scoreCompDiv  = document.querySelector('.score-in-message-comp'),
-            theWinner = document.querySelector('.theWinner');
-
-
+            scoreManDiv  = document.querySelectorAll('.score-in-message-man span'),
+            scoreCompDiv  = document.querySelectorAll('.score-in-message-comp span'),
+            theWinner = document.querySelector('.theWinner'),
+            changeFigure = document.querySelector('#changeButton'),
+            resetScore = document.querySelector('#resetButton'),
+            humanFigure = document.querySelector('.human-turn span'),
+            aiFigure = document.querySelector('.ai-turn span');
             let manValue, 
                 compValue, 
                 counter = 1, 
@@ -188,7 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         } else {
                             restartButton.style.display="block"
                         }
-                        scoreManDiv.innerHTML = scoreMan;
+                        scoreManDiv.forEach(e => {
+                            e.innerHTML = scoreMan;
+                        })
                         winnigMessage.classList.remove('hide');
                         winnigMessage.classList.add('show');
                         theWinner.innerHTML = "Human"
@@ -208,7 +212,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         } else {
                             restartButton.style.display="block"
                         }
-                        scoreCompDiv.innerHTML = scoreAi;
+                        scoreCompDiv.forEach(e => {
+                            e.innerHTML = scoreAi;
+                        })
                         winnigMessage.classList.remove('hide');
                         winnigMessage.classList.add('show');
                         theWinner.innerHTML = "Computer"
@@ -218,8 +224,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (finalCheckin) {
-            console.log(excludePool);
-            if (excludePool.length === 9) {
+            let i = 0;
+            fieldOfGame.forEach(e => {
+                if (e !== '') {
+                    i++;
+                }
+            })
+            if (i === 9) {
                 itsFirstGame = false;
                 if (itsFirstGame) {
                     startButton.style.display="block";
@@ -236,6 +247,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
+    function resetScoreBtn() {
+        scoreMan = 0;
+        scoreAi = 0;
+        scoreManDiv.forEach(e => {
+            e.innerHTML = scoreAi;
+        })
+        scoreCompDiv.forEach(e => {
+            e.innerHTML = scoreAi;
+        })
+    }
+
+    function restartResetBtn() {
+        if (manValue === 'x') {
+            humanFigure.innerHTML = 'O';
+            manValue = 'circle';
+            aiFigure.innerHTML = 'X';
+            compValue = 'x';
+            
+        } else {
+            humanFigure.innerHTML = 'X';
+            manValue = 'x';
+            aiFigure.innerHTML = 'O';
+            compValue= 'circle';
+        }
+        start();
+    }
+
+    
     // Кнопка старт
     startButton.addEventListener('click', e => {
         console.log(e);
@@ -243,37 +282,23 @@ document.addEventListener('DOMContentLoaded', () => {
         restartButton.style.display="block";
         // Распределение первого хода (первыми ходят всегда крестики, поэтому распределение, кто чем ходит)
        if (randomInt(2) === 1) {
-            man.innerHTML = `X`;
+            humanFigure.innerHTML = `X`;
             manValue = `x`;
-            comp.innerHTML = `O`;
+            aiFigure.innerHTML = `O`;
             compValue = `circle`;
         } else {
-            man.innerHTML = `O`;
+            humanFigure.innerHTML = `O`;
             manValue = `circle`;
-            comp.innerHTML = `X`;
+            aiFigure.innerHTML = `X`;
             compValue = `x`;
         }
         // При нажатии на старт запускаем фукнцию "старт".
         start()
     });
 
-    restartButton.addEventListener('click', e => {
-        if (manValue === 'x') {
-            man.innerHTML = 'O';
-            manValue = 'circle';
-            comp.innerHTML = 'X';
-            manValue = 'x';
-            
-        } else {
-            man.innerHTML = 'X';
-            manValue = 'x';
-            comp.innerHTML = 'O';
-            compValue= 'circle';
-        }
 
-        start();
-    });
-    
+
+    restartButton.addEventListener('click', restartResetBtn);
+    changeFigure.addEventListener('click', restartResetBtn);
+    resetScore.addEventListener('click', resetScoreBtn);
 });
-
-// 
