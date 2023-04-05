@@ -15,12 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
            
     let manValue, // чем играет человек
         compValue, // чем играет компьютер
-        counter = 1, // счетчик
+        counter = 0, // счетчик
         scoreMan = 0, // очки человека
         scoreAi = 0, // очки компьютера
         itsFirstGame = true, // переменная первой игры
         fieldOfGame = [], // Массив основного игрового поля
-        excludePool = []; //массив "занятых" полей 
+        excludePool = [], //массив "занятых" полей 
+        counterForOntableWriteResult = 0;
 
 
     //Функция определения рандомного числа от 1 до num                    
@@ -31,39 +32,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     //Функция хода компьютера
     function aiTurn(compValue) {
-        excludePool = []; // при ходе компьютера каждый раз обнуляем массив с занятыми полями
-        const filteredPool = []; //Создаем обнуленный отфильтрованный массив
-        fieldOfGame.forEach((e, i) => {
-            if (fieldOfGame[i] !== '') {
-                excludePool.push(i); //Записываем занятые поля
-            }
-        })
-
-        numPool.forEach ((e, i) => {
-            if (excludePool.indexOf(numPool[i]) === -1) {
-                filteredPool.push(numPool[i]); // Записываем свободные поля
-            }
-        })
-        if (counter === 1) { // Первый ход рандомный
-            const rand = filteredPool[Math.floor(Math.random() * filteredPool.length)]; //ищем рандомное число из доступных ходов
-            fieldOfGame[rand] = compValue; // Запись в игровое поле
-            cells.forEach(e => {
-                if(+e.dataset.cell === rand) {
-                    e.classList.add(compValue); // Запись в ячейку в HTML
+            excludePool = []; // при ходе компьютера каждый раз обнуляем массив с занятыми полями
+            const filteredPool = []; //Создаем обнуленный отфильтрованный массив
+            fieldOfGame.forEach((e, i) => {
+                if (fieldOfGame[i] !== '') {
+                    excludePool.push(i); //Записываем занятые поля
                 }
             })
-            counter++;
-        } else {
-            // Если ход не первый - запускаем функцию анализа кода
-            revievNextTurn(fieldOfGame, filteredPool, compValue, manValue);
-        }
-        
-            
-        
+    
+            numPool.forEach ((e, i) => {
+                if (excludePool.indexOf(numPool[i]) === -1) {
+                    filteredPool.push(numPool[i]); // Записываем свободные поля
+                }
+            })
+            if (counter === 0) { // Первый ход рандомный
+                const rand = filteredPool[Math.floor(Math.random() * filteredPool.length)]; //ищем рандомное число из доступных ходов
+                fieldOfGame[rand] = compValue; // Запись в игровое поле
+                cells.forEach(e => {
+                    if(+e.dataset.cell === rand) {
+                        e.classList.add(compValue); // Запись в ячейку в HTML
+                    }
+                })
+                counter++;
+            } else {
+                // Если ход не первый - запускаем функцию анализа кода
+                revievNextTurn(fieldOfGame, filteredPool, compValue, manValue);
+            }      
     }
 
     //начало игры
     function start() {
+        counter++; 
         excludePool = []; // при старте обнуляем массив с исключениями
         fieldOfGame = [   
             '', '', '',
@@ -195,6 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         winnigMessage.classList.remove('hide');
                         winnigMessage.classList.add('show');
                         theWinner.innerHTML = "Human";//вывод победителя
+                        ontableWriteResult("Human", counter) 
                         return "man";
                 }
             }
@@ -217,10 +217,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         winnigMessage.classList.remove('hide');
                         winnigMessage.classList.add('show');
                         theWinner.innerHTML = "Computer"; //вывод победителя
+                        ontableWriteResult("Computer", counter); 
                         return;
                 } 
             }
-        }
+        } 
         
         if (finalCheckin) { //проверка ничьи
             let i = 0;
@@ -230,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }); // если все поля не пустые (9), и не сработала ни одна из верхних проверок - то ничья
             if (i === 9) { 
+                ontableWriteResult("Draw", counter)
                 itsFirstGame = false;
                 if (itsFirstGame) {
                     startButton.style.display="block";
@@ -248,6 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // функция сброса очков
     function resetScoreBtn() {
+        counter = 0;
         scoreMan = 0;
         scoreAi = 0;
         scoreManDiv.forEach(e => {
@@ -256,6 +259,14 @@ document.addEventListener('DOMContentLoaded', () => {
         scoreCompDiv.forEach(e => {
             e.innerHTML = scoreAi;
         });
+
+        table = document.querySelector('.scoreboard-table tbody');
+        table.innerHTML = `
+            <tr>
+                <td>№</td>
+                <td>Result</td>
+            </tr>
+        `;
     }
 
 
@@ -274,6 +285,27 @@ document.addEventListener('DOMContentLoaded', () => {
             compValue= 'circle';
         }
         start();
+    }
+
+    // Фунция записи в таблицу
+    function ontableWriteResult(winner, counter) {
+        
+        // код до 293 строки является костылем, так как функция вызывалась 2 раза, а у меня не оставалось времени на переписывание кода
+        if (winner === 'Draw') {
+            counterForOntableWriteResult++;
+        }
+        if (counterForOntableWriteResult > 1) {
+            counterForOntableWriteResult = 0;
+            return
+        }
+        
+        table = document.querySelector('.scoreboard-table tbody');
+        table.innerHTML += `
+            <tr>
+                <td>${counter}.</td>
+                <td>${((winner === 'Draw') ? winner : `Winner ${winner}`)}</td>
+            </tr>
+        `;
     }
 
     

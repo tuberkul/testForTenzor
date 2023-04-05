@@ -268,3 +268,44 @@ body {
     color: white;
     border-color: white;
 }
+
+.change-figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scoreboard_wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.scoreboard-fixed {
+    width: 200px;
+}
+
+.scoreboard-table-wrapper {
+    display: flex;
+    max-height: 150px;
+    position: absolute;
+    top: 61.5%;
+    left: 65%;
+}
+
+.scoreboard-table-wrapper table {
+    display: block;
+    overflow-y: auto;
+    overflow-x: hidden;
+    white-space: nowrap;
+    padding-right: 20px;
+}
+
+.scoreboard-table-wrapper table {
+    background-color: rgba(0, 0, 0, .1);
+}
+
+.scoreboard-table-wrapper table td {
+    border-bottom: 1px solid black
+}
