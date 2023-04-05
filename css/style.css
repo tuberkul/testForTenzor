@@ -294,7 +294,7 @@ body {
     left: 65%;
 }
 
-.scoreboard-table-wrapper table {
+.scoreboard-table {
     display: block;
     overflow-y: auto;
     overflow-x: hidden;
@@ -302,10 +302,10 @@ body {
     padding-right: 20px;
 }
 
-.scoreboard-table-wrapper table {
+.scoreboard-table {
     background-color: rgba(0, 0, 0, .1);
 }
 
-.scoreboard-table-wrapper table td {
+.scoreboard-table-wrapper ul li {
     border-bottom: 1px solid black
 }

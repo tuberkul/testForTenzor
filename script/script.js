@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         winnigMessage.classList.remove('hide');
                         winnigMessage.classList.add('show');
                         theWinner.innerHTML = "Human";//вывод победителя
-                        ontableWriteResult("Human", counter) 
+                        ontableWriteResult("Human") 
                         return "man";
                 }
             }
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         winnigMessage.classList.remove('hide');
                         winnigMessage.classList.add('show');
                         theWinner.innerHTML = "Computer"; //вывод победителя
-                        ontableWriteResult("Computer", counter); 
+                        ontableWriteResult("Computer"); 
                         return;
                 } 
             }
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }); // если все поля не пустые (9), и не сработала ни одна из верхних проверок - то ничья
             if (i === 9) { 
-                ontableWriteResult("Draw", counter)
+                ontableWriteResult("Draw")
                 itsFirstGame = false;
                 if (itsFirstGame) {
                     startButton.style.display="block";
@@ -260,12 +260,9 @@ document.addEventListener('DOMContentLoaded', () => {
             e.innerHTML = scoreAi;
         });
 
-        table = document.querySelector('.scoreboard-table tbody');
+        table = document.querySelector('.scoreboard-table');
         table.innerHTML = `
-            <tr>
-                <td>№</td>
-                <td>Result</td>
-            </tr>
+            <li>Result</li>
         `;
     }
 
@@ -288,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Фунция записи в таблицу
-    function ontableWriteResult(winner, counter) {
+    function ontableWriteResult(winner) {
         
         // код до 293 строки является костылем, так как функция вызывалась 2 раза, а у меня не оставалось времени на переписывание кода
         if (winner === 'Draw') {
@@ -299,12 +296,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return
         }
         
-        table = document.querySelector('.scoreboard-table tbody');
+        table = document.querySelector('.scoreboard-table');
         table.innerHTML += `
-            <tr>
-                <td>${counter}.</td>
-                <td>${((winner === 'Draw') ? winner : `Winner ${winner}`)}</td>
-            </tr>
+            <li>${((winner === 'Draw') ? winner : `Winner ${winner}`)}</li>
         `;
     }
 
